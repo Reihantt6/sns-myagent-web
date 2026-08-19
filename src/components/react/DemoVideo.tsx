@@ -3,6 +3,11 @@ import { useEffect, useState } from "react";
 const VIDEO_SRC = "/videos/sns-myagent-demo.mp4";
 const POSTER_SRC = "/videos/sns-myagent-demo.poster.jpg";
 
+// Chromium honors `loading="lazy"` on <video> (deferring fetch until the
+// element nears the viewport), but the attribute is not yet typed in
+// @types/react, so it is applied through a typed spread.
+const VIDEO_LAZY = { loading: "lazy" } as unknown as React.VideoHTMLAttributes<HTMLVideoElement>;
+
 const FRAME_CLASS =
   "aspect-video w-full rounded-2xl border border-zinc-800 bg-black object-cover shadow-[0_20px_60px_rgba(0,0,0,0.35)]";
 
@@ -35,6 +40,7 @@ export function DemoVideo() {
 
   return (
     <video
+      {...VIDEO_LAZY}
       src={VIDEO_SRC}
       poster={POSTER_SRC}
       autoPlay
@@ -42,7 +48,6 @@ export function DemoVideo() {
       loop
       playsInline
       preload="none"
-      loading="lazy"
       aria-label="SNS-MyAgent 45-second product demo"
       className={FRAME_CLASS}
     />

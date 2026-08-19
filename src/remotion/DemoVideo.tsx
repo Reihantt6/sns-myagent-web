@@ -1,4 +1,5 @@
-import { AbsoluteFill, Audio, Sequence, interpolate, useCurrentFrame } from "remotion";
+import { Audio } from "@remotion/media";
+import { AbsoluteFill, Sequence, interpolate, useCurrentFrame } from "remotion";
 import ambient from "./audio/ambient.wav";
 import { sceneOpacity } from "./helpers";
 import { Scene1Hook } from "./scenes/Scene1Hook";

@@ -18,6 +18,7 @@
     "@phosphor-icons/react": "^2.1.10",
     "@remotion/cli": "^4.0.513",
     "@remotion/google-fonts": "^4.0.513",
+    "@remotion/media": "4.0.513",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^5.12.0",
     "motion": "^13.1.0",
