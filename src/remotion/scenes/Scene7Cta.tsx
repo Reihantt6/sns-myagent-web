@@ -1,8 +1,15 @@
+import finalchime from "../audio/sfx/finalchime.wav";
+import rumble from "../audio/sfx/rumble.wav";
+import { Sfx } from "../components/Sfx";
 import { fadeIn, slideUp } from "../helpers";
 import { C } from "../theme";
 
-/** Scene 6 · CTA (40-45s): logo, URL, install pill with subtle glow. */
-export function Scene6Cta({ frame }: { frame: number }) {
+/**
+ * Scene 7 · CTA (48-55s): logo, URL, install pill with subtle glow.
+ * Warm final chime + soft sub rumble swell under the logo; the scene
+ * (and the URL) fades out to black exactly at 55s via the scene shell.
+ */
+export function Scene7Cta({ frame }: { frame: number }) {
   return (
     <div
       style={{
@@ -15,6 +22,9 @@ export function Scene6Cta({ frame }: { frame: number }) {
         textAlign: "center",
       }}
     >
+      <Sfx src={finalchime} at={16} volume={0.8} />
+      <Sfx src={rumble} at={22} volume={0.55} />
+
       <div
         style={{
           fontFamily: "var(--font-mono)",

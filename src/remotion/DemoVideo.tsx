@@ -1,17 +1,46 @@
 import { Audio } from "@remotion/media";
 import { AbsoluteFill, Sequence, interpolate, useCurrentFrame } from "remotion";
-import ambient from "./audio/ambient.wav";
-import { sceneOpacity } from "./helpers";
+import tanteCulik from "./audio/tante-culik.wav";
+import { EASE_IN, EASE_OUT, sceneOpacity } from "./helpers";
 import { Scene1Hook } from "./scenes/Scene1Hook";
 import { Scene2Install } from "./scenes/Scene2Install";
 import { Scene3Setup } from "./scenes/Scene3Setup";
 import { Scene4Capabilities } from "./scenes/Scene4Capabilities";
-import { Scene5Workflow } from "./scenes/Scene5Workflow";
-import { Scene6Cta } from "./scenes/Scene6Cta";
+import { Scene4Docs } from "./scenes/Scene4Docs";
+import { Scene5Subagents } from "./scenes/Scene5Subagents";
+import { Scene7Cta } from "./scenes/Scene7Cta";
 import { C, FADE_IN, OVERLAP, SCENE, TOTAL_FRAMES } from "./theme";
 
+const clamp = { extrapolateLeft: "clamp" as const, extrapolateRight: "clamp" as const };
+
 /**
- * 45s brand demo. Every scene fades in (0.6s ease-out) and out (0.4s
+ * Music bed volume: the wav is pre-mixed at ~-17dB RMS / -7.4dB peak.
+ * Fade in 1.5s, fade out 2s, and dip ~2.5-3dB during SFX-heavy windows
+ * so effects cut through without raising the bed above -12dB.
+ */
+function musicVolume(frame: number) {
+  const fadeIn = interpolate(frame, [0, 45], [0, 1], { easing: EASE_OUT, ...clamp });
+  const fadeOut = interpolate(frame, [TOTAL_FRAMES - 60, TOTAL_FRAMES], [1, 0], {
+    easing: EASE_IN,
+    ...clamp,
+  });
+  const dip = (start: number, end: number, level: number) => {
+    const a = interpolate(frame, [start - 12, start], [1, level], { ...clamp });
+    const b = interpolate(frame, [end, end + 12], [level, 1], { ...clamp });
+    return Math.max(a, b);
+  };
+  const dips =
+    dip(150, 318, 0.72) * // install typing ticks
+    dip(342, 508, 0.78) * // setup blips
+    dip(522, 748, 0.72) * // docs swishes/clicks
+    dip(762, 1078, 0.7) * // subagent sparkles + writes
+    dip(1092, 1418, 0.78) * // capability chimes
+    dip(1452, 1608, 0.8); // CTA chime + rumble
+  return fadeIn * fadeOut * dips;
+}
+
+/**
+ * 55s brand demo. Every scene fades in (0.6s ease-out) and out (0.4s
  * ease-in) and overlaps its neighbours by 0.4s for a soft crossfade —
  * no hard cuts anywhere.
  */
@@ -22,16 +51,11 @@ export function DemoVideo() {
     { from: SCENE.hook.start, durationInFrames: SCENE.hook.dur + OVERLAP, el: (f) => <Scene1Hook frame={f} /> },
     { from: SCENE.install.start, durationInFrames: SCENE.install.dur + OVERLAP, el: (f) => <Scene2Install frame={f} /> },
     { from: SCENE.setup.start, durationInFrames: SCENE.setup.dur + OVERLAP, el: (f) => <Scene3Setup frame={f} /> },
+    { from: SCENE.docs.start, durationInFrames: SCENE.docs.dur + OVERLAP, el: (f) => <Scene4Docs frame={f} /> },
+    { from: SCENE.subagents.start, durationInFrames: SCENE.subagents.dur + OVERLAP, el: (f) => <Scene5Subagents frame={f} /> },
     { from: SCENE.capabilities.start, durationInFrames: SCENE.capabilities.dur + OVERLAP, el: (f) => <Scene4Capabilities frame={f} /> },
-    { from: SCENE.workflow.start, durationInFrames: SCENE.workflow.dur + OVERLAP, el: (f) => <Scene5Workflow frame={f} /> },
-    { from: SCENE.cta.start, durationInFrames: SCENE.cta.dur, el: (f) => <Scene6Cta frame={f} /> },
+    { from: SCENE.cta.start, durationInFrames: SCENE.cta.dur, el: (f) => <Scene7Cta frame={f} /> },
   ];
-
-  // Quiet ambient bed: already mixed at ~-18dB in the wav; fade in/out at edges.
-  const volume = interpolate(frame, [0, 60, TOTAL_FRAMES - 90, TOTAL_FRAMES], [0, 1, 1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
 
   return (
     <AbsoluteFill style={{ backgroundColor: C.bg, fontFamily: "var(--font-sans)" }}>
@@ -42,10 +66,7 @@ export function DemoVideo() {
           inset: 0,
           background:
             "radial-gradient(ellipse at 50% 0%, rgba(234, 88, 12, 0.065), transparent 58%)",
-          opacity: interpolate(frame, [0, FADE_IN * 2], [0, 1], {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-          }),
+          opacity: interpolate(frame, [0, FADE_IN * 2], [0, 1], { ...clamp }),
         }}
       />
       {scenes.map((s, i) => (
@@ -53,7 +74,7 @@ export function DemoVideo() {
           <SceneShell duration={s.durationInFrames} render={s.el} />
         </Sequence>
       ))}
-      <Audio src={ambient} volume={volume} />
+      <Audio src={tanteCulik} volume={musicVolume} />
     </AbsoluteFill>
   );
 }

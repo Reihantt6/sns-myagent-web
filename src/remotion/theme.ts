@@ -24,14 +24,15 @@ export const HEIGHT = 1080;
 /** Scene windows (nominal, in frames at 30fps). */
 export const SCENE = {
   hook: { start: 0, dur: 150 },
-  install: { start: 150, dur: 210 },
-  setup: { start: 360, dur: 240 },
-  capabilities: { start: 600, dur: 360 },
-  workflow: { start: 960, dur: 240 },
-  cta: { start: 1200, dur: 150 },
+  install: { start: 150, dur: 180 },
+  setup: { start: 330, dur: 180 },
+  docs: { start: 510, dur: 240 },
+  subagents: { start: 750, dur: 330 },
+  capabilities: { start: 1080, dur: 360 },
+  cta: { start: 1440, dur: 210 },
 } as const;
 
-export const TOTAL_FRAMES = 1350; // 45s @ 30fps
+export const TOTAL_FRAMES = 1650; // 55s @ 30fps
 
 /** Crossfade overlap between scenes: 0.4s (12 frames). */
 export const OVERLAP = 12;

@@ -1,3 +1,6 @@
+import beep from "../audio/sfx/beep.wav";
+import tick from "../audio/sfx/tick.wav";
+import { Sfx } from "../components/Sfx";
 import { BlockCursor, MONO, TerminalWindow } from "../components/TerminalWindow";
 import { cursorBlink, fadeIn, slideUp, typedChars } from "../helpers";
 import { C } from "../theme";
@@ -6,7 +9,12 @@ const CMD = "npm i -g snsagent";
 const TYPING_START = 26;
 const TYPING_SPEED = 3.1;
 
-/** Scene 2 · INSTALL (5-12s): one-command install typing animation. */
+/** Keyboard tick on each character reveal. */
+const TICKS = Array.from({ length: CMD.length }, (_, i) =>
+  Math.floor(TYPING_START + i * TYPING_SPEED),
+);
+
+/** Scene 2 · INSTALL (5-11s): one-command install typing animation. */
 export function Scene2Install({ frame }: { frame: number }) {
   const typed = typedChars(frame, TYPING_START, TYPING_SPEED);
   const typingDone = frame >= TYPING_START + CMD.length * TYPING_SPEED;
@@ -22,6 +30,11 @@ export function Scene2Install({ frame }: { frame: number }) {
         justifyContent: "center",
       }}
     >
+      {/* Startup beep when the terminal opens, keyboard ticks per typed char */}
+      <Sfx src={beep} at={8} volume={0.8} />
+      {TICKS.map((at, i) => (
+        <Sfx key={i} src={tick} at={at} volume={0.5} />
+      ))}
       <TerminalWindow title="snsagent — zsh" width={1040} style={slideUp(frame, 8, 24, 30)}>
         <div style={{ ...MONO, fontSize: 27, lineHeight: 1.8, color: C.fg }}>
           <div style={{ display: "flex", alignItems: "center" }}>

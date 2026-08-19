@@ -1,3 +1,6 @@
+import chime from "../audio/sfx/chime.wav";
+import whoosh from "../audio/sfx/whoosh.wav";
+import { Sfx } from "../components/Sfx";
 import { fadeIn, slideUp } from "../helpers";
 import { C } from "../theme";
 
@@ -13,6 +16,9 @@ export function Scene1Hook({ frame }: { frame: number }) {
         justifyContent: "center",
       }}
     >
+      {/* Soft whoosh as the logo lands, shimmer chime right after */}
+      <Sfx src={whoosh} at={4} volume={0.8} />
+      <Sfx src={chime} at={14} volume={0.7} />
       {/* Soft orange aura behind the logo */}
       <div
         style={{

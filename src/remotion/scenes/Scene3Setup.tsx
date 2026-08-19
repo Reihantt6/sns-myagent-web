@@ -1,4 +1,6 @@
+import blip from "../audio/sfx/blip.wav";
 import { Check } from "../components/Icons";
+import { Sfx } from "../components/Sfx";
 import { BlockCursor, MONO, TerminalWindow } from "../components/TerminalWindow";
 import { fadeIn, slideUp, typedChars } from "../helpers";
 import { C } from "../theme";
@@ -21,7 +23,15 @@ const FIELDS: Field[] = [
 
 const PLATFORMS = ["Windows", "Linux", "macOS", "Termux"];
 
-/** Scene 3 · SETUP (12-20s): wizard fields auto-fill, Connected badge, platform chips. */
+// Rising-pitch blips (440 → 523 → 659 → 784 Hz) on each field + Connected.
+const BLIPS: { at: number; rate: number }[] = [
+  { at: 26, rate: 1.0 },
+  { at: 60, rate: 1.1892 },
+  { at: 90, rate: 1.4983 },
+  { at: 134, rate: 1.7818 },
+];
+
+/** Scene 3 · SETUP (11-17s): wizard fields auto-fill, Connected badge, platform chips. */
 export function Scene3Setup({ frame }: { frame: number }) {
   return (
     <div
@@ -34,6 +44,10 @@ export function Scene3Setup({ frame }: { frame: number }) {
         justifyContent: "center",
       }}
     >
+      {/* UI tick blips, rising in pitch per field */}
+      {BLIPS.map((b, i) => (
+        <Sfx key={i} src={blip} at={b.at} volume={0.55} playbackRate={b.rate} />
+      ))}
       <TerminalWindow title="snsagent — first run" width={1040} style={slideUp(frame, 6, 24, 30)}>
         <div style={{ fontFamily: "var(--font-sans)", fontSize: 23, fontWeight: 700, color: C.fg }}>
           Setup wizard
