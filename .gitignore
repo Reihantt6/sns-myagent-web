@@ -9,6 +9,12 @@ node_modules/
 src/content/docs/
 public/screenshots/
 
+# Generated at render time by scripts/gen-ambient.mjs
+src/remotion/audio/
+
+# Remotion render output
+out/
+
 # Local tooling
 .env
 .env.*

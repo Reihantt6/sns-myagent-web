@@ -4,6 +4,7 @@ import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import { WordReveal } from "../components/react/WordReveal";
 import { HeroTerminal } from "../components/react/HeroTerminal";
+import { DemoVideo } from "../components/react/DemoVideo";
 import { PlatformSelector } from "../components/react/PlatformSelector";
 import { BentoGrid, type BentoCell } from "../components/react/BentoGrid";
 import { Reveal } from "../components/react/Reveal";
@@ -129,6 +130,9 @@ const docsQuick = [
 
       <div class="relative z-10 min-w-0">
         <HeroTerminal client:load />
+        <div class="mt-7">
+          <DemoVideo client:load />
+        </div>
       </div>
     </section>
 
