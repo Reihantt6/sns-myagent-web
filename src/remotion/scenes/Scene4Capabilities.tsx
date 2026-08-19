@@ -1,6 +1,6 @@
 import { interpolate } from "remotion";
-import cardChime from "../audio/sfx-v2/card-chime.wav";
-import countTick from "../audio/sfx-v2/count-tick.wav";
+import cardChime from "../audio/sfx-v3/card-chime.wav";
+import countTick from "../audio/sfx-v3/count-tick.wav";
 import type { CSSProperties } from "react";
 import { Icon } from "../components/Icons";
 import { Sfx } from "../components/Sfx";
@@ -101,7 +101,7 @@ function CardView({ card, index, frame }: { card: Card; index: number; frame: nu
   );
 }
 
-/** Pentatonic C-D-E-G-A-C run for the six card completions (523 → 1046 Hz). */
+/** Gentle chord progression for the six card completions (C major triad, rising). */
 const CHIMES = [1.0, 1.1225, 1.26, 1.4983, 1.6818, 2.0];
 
 /** Card completion frames (same math as CardView). */
@@ -122,9 +122,9 @@ export function Scene4Capabilities({ frame }: { frame: number }) {
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      {/* Count-up ff3ct ticks, sharper pentatonic chime per completed card */}
+      {/* Whisper-quiet count ticks, warm C-major chord per completed card */}
       {COUNT_TICKS.map((at, i) => (
-        <Sfx key={i} src={countTick} at={at} volume={0.28} />
+        <Sfx key={i} src={countTick} at={at} volume={0.35} />
       ))}
       {DONE_AT.map((at, i) => (
         <Sfx key={i} src={cardChime} at={at} volume={0.6} playbackRate={CHIMES[i]} />

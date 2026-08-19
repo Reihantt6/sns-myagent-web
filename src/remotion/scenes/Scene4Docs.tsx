@@ -1,7 +1,7 @@
 import { interpolate } from "remotion";
-import browserSwish from "../audio/sfx-v2/browser-swish.wav";
-import linkClick from "../audio/sfx-v2/link-click.wav";
-import scrollSwoosh from "../audio/sfx-v2/scroll-swoosh.wav";
+import browserSwish from "../audio/sfx-v3/browser-swish.wav";
+import linkClick from "../audio/sfx-v3/link-click.wav";
+import scrollSwoosh from "../audio/sfx-v3/scroll-swoosh.wav";
 import { Sfx } from "../components/Sfx";
 import { cursorBlink, fadeIn, slideUp } from "../helpers";
 import { C } from "../theme";
@@ -46,11 +46,11 @@ export function Scene4Docs({ frame }: { frame: number }) {
         justifyContent: "center",
       }}
     >
-      {/* Browser swish on open, scroll swoosh, link clicks per sidebar switch */}
-      <Sfx src={browserSwish} at={6} volume={0.7} />
-      <Sfx src={scrollSwoosh} at={55} volume={0.7} />
-      <Sfx src={linkClick} at={120} volume={0.8} />
-      <Sfx src={linkClick} at={180} volume={0.8} />
+      {/* Page-unfolding swish on open, soft scroll swoosh, wood-block link clicks */}
+      <Sfx src={browserSwish} at={6} volume={0.8} />
+      <Sfx src={scrollSwoosh} at={55} volume={0.8} />
+      <Sfx src={linkClick} at={120} volume={0.85} />
+      <Sfx src={linkClick} at={180} volume={0.85} />
 
       <div
         style={{

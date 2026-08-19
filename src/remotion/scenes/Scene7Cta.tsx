@@ -1,5 +1,5 @@
-import finalChord from "../audio/sfx-v2/final-chord.wav";
-import subSwell from "../audio/sfx-v2/sub-swell.wav";
+import finalChord from "../audio/sfx-v3/final-chord.wav";
+import subSwell from "../audio/sfx-v3/sub-swell.wav";
 import { Sfx } from "../components/Sfx";
 import { fadeIn, slideUp } from "../helpers";
 import { C } from "../theme";
@@ -25,8 +25,8 @@ export function Scene7Cta({ frame }: { frame: number }) {
         textAlign: "center",
       }}
     >
-      <Sfx src={finalChord} at={16} volume={0.85} />
-      <Sfx src={subSwell} at={20} volume={0.6} />
+      <Sfx src={finalChord} at={16} volume={0.9} />
+      <Sfx src={subSwell} at={20} volume={0.7} />
 
       <div
         style={{

@@ -1,5 +1,5 @@
-import keyTick from "../audio/sfx-v2/key-tick.wav";
-import termBeep from "../audio/sfx-v2/term-beep.wav";
+import keyTick from "../audio/sfx-v3/key-tick.wav";
+import termBeep from "../audio/sfx-v3/term-beep.wav";
 import { Sfx } from "../components/Sfx";
 import { BlockCursor, MONO, TerminalWindow } from "../components/TerminalWindow";
 import { cursorBlink, fadeIn, slideUp, typedChars } from "../helpers";
@@ -30,10 +30,10 @@ export function Scene2Install({ frame }: { frame: number }) {
         justifyContent: "center",
       }}
     >
-      {/* Sharp terminal startup beep, digital key ticks per typed char */}
+      {/* Warm terminal welcome tone, soft mechanical key ticks per char */}
       <Sfx src={termBeep} at={8} volume={0.8} />
       {TICKS.map((at, i) => (
-        <Sfx key={i} src={keyTick} at={at} volume={0.5} />
+        <Sfx key={i} src={keyTick} at={at} volume={0.55} />
       ))}
       <TerminalWindow title="snsagent — zsh" width={1040} style={slideUp(frame, 8, 24, 30)}>
         <div style={{ ...MONO, fontSize: 27, lineHeight: 1.8, color: C.fg }}>

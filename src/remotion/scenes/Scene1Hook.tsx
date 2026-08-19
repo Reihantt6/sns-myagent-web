@@ -1,7 +1,6 @@
 import { interpolate } from "remotion";
-import dataTick from "../audio/sfx-v2/data-tick.wav";
-import logoChime from "../audio/sfx-v2/logo-chime.wav";
-import riser from "../audio/sfx-v2/riser.wav";
+import logoChime from "../audio/sfx-v3/logo-chime.wav";
+import softWhoosh from "../audio/sfx-v3/soft-whoosh.wav";
 import { Sfx } from "../components/Sfx";
 import { EASE_OUT, fadeIn, slideUp } from "../helpers";
 import { C } from "../theme";
@@ -26,9 +25,8 @@ export function Scene1Hook({ frame }: { frame: number }) {
         justifyContent: "center",
       }}
     >
-      {/* Sharp digital riser into the logo, clean chime on landing, tiny data tick */}
-      <Sfx src={riser} at={2} volume={0.8} />
-      <Sfx src={dataTick} at={12} volume={0.7} />
+      {/* Warm whoosh into the logo, glassy chime on landing */}
+      <Sfx src={softWhoosh} at={2} volume={0.9} />
       <Sfx src={logoChime} at={15} volume={0.8} />
       {/* Soft orange aura behind the logo */}
       <div

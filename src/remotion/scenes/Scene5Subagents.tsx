@@ -1,6 +1,6 @@
-import dataWrite from "../audio/sfx-v2/data-write.wav";
-import sparkleArpeggio from "../audio/sfx-v2/sparkle-arpeggio.wav";
-import successChime from "../audio/sfx-v2/success-chime.wav";
+import dataWrite from "../audio/sfx-v3/data-write.wav";
+import sparkle from "../audio/sfx-v3/sparkle.wav";
+import successChime from "../audio/sfx-v3/success-chime.wav";
 import { Check, Icon } from "../components/Icons";
 import { Sfx } from "../components/Sfx";
 import { BlockCursor, MONO, TerminalWindow } from "../components/TerminalWindow";
@@ -40,14 +40,14 @@ export function Scene5Subagents({ frame }: { frame: number }) {
         gap: 34,
       }}
     >
-      {/* Arpeggio sparkle per subagent spawn, digital write ticks, success chime */}
+      {/* Crystal sparkle per subagent spawn, soft pen-write ticks, refined chime */}
       {AGENTS.map((a, i) => (
-        <Sfx key={`s${i}`} src={sparkleArpeggio} at={a.spawn} volume={0.75} />
+        <Sfx key={`s${i}`} src={sparkle} at={a.spawn} volume={0.8} />
       ))}
       {AGENTS.map((a, i) => (
-        <Sfx key={`w${i}`} src={dataWrite} at={a.spawn + 12} volume={0.65} />
+        <Sfx key={`w${i}`} src={dataWrite} at={a.spawn + 12} volume={0.7} />
       ))}
-      <Sfx src={successChime} at={172} volume={0.8} />
+      <Sfx src={successChime} at={172} volume={0.85} />
 
       {/* Skills chip row, top-right */}
       <div

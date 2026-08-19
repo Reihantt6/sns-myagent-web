@@ -21,21 +21,25 @@ export const FPS = 30;
 export const WIDTH = 1920;
 export const HEIGHT = 1080;
 
-/** Scene windows (nominal, in frames at 30fps) — 47s total. */
+/**
+ * Scene durations (in frames at 30fps). Sum = 1485. TransitionSeries
+ * overlaps each cut by TRANSITION frames (5 transitions × 15), so the
+ * rendered timeline is 1485 − 75 = 1410 frames = 47s.
+ */
 export const SCENE = {
-  hook: { start: 0, dur: 120 },
-  install: { start: 120, dur: 180 },
-  setup: { start: 300, dur: 180 },
-  docs: { start: 480, dur: 240 },
-  subagents: { start: 720, dur: 270 },
-  capabilities: { start: 990, dur: 270 },
-  cta: { start: 1260, dur: 150 },
+  hook: { dur: 125 },
+  install: { dur: 190 },
+  setup: { dur: 190 },
+  docs: { dur: 250 },
+  subagents: { dur: 285 },
+  capabilities: { dur: 285 },
+  cta: { dur: 160 },
 } as const;
 
 export const TOTAL_FRAMES = 1410; // 47s @ 30fps
 
-/** Crossfade overlap between scenes: 0.4s (12 frames). */
-export const OVERLAP = 12;
+/** TransitionSeries cut duration: 0.5s @ 30fps. */
+export const TRANSITION = 15;
 
 /** Fade timings per the transition grammar. */
 export const FADE_IN = 18; // 0.6s ease-out

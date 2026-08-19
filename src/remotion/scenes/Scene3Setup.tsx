@@ -1,4 +1,4 @@
-import uiBlip from "../audio/sfx-v2/ui-blip.wav";
+import uiBlip from "../audio/sfx-v3/ui-blip.wav";
 import { Check } from "../components/Icons";
 import { Sfx } from "../components/Sfx";
 import { BlockCursor, MONO, TerminalWindow } from "../components/TerminalWindow";
@@ -23,13 +23,13 @@ const FIELDS: Field[] = [
 
 const PLATFORMS = ["Windows", "Linux", "macOS", "Termux"];
 
-// Rising-pitch blips (660 → 880 → 1100 → 1320 Hz) on each field + Connected.
-// ui-blip.wav is synthesized at 660Hz; playbackRate multiplies the pitch.
+// Pleasing chord-arpeggio blips on each field + Connected: 392 → 494 → 587 → 698 Hz
+// (G4/B4/D5/F5). ui-blip.wav is synthesized at 392Hz; playbackRate multiplies.
 const BLIPS: { at: number; rate: number }[] = [
-  { at: 26, rate: 1.0 }, // 660 Hz
-  { at: 60, rate: 1.3333 }, // 880 Hz
-  { at: 90, rate: 1.6667 }, // 1100 Hz
-  { at: 134, rate: 2.0 }, // 1320 Hz
+  { at: 26, rate: 1.0 }, // 392 Hz
+  { at: 60, rate: 1.2602 }, // 494 Hz
+  { at: 90, rate: 1.4974 }, // 587 Hz
+  { at: 134, rate: 1.7806 }, // 698 Hz
 ];
 
 /** Scene 3 · SETUP (10-16s): wizard fields auto-fill, Connected badge, platform chips. */
