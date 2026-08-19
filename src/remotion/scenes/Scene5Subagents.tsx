@@ -1,6 +1,6 @@
-import sparkle from "../audio/sfx/sparkle.wav";
-import whoosh from "../audio/sfx/whoosh.wav";
-import write from "../audio/sfx/write.wav";
+import dataWrite from "../audio/sfx-v2/data-write.wav";
+import sparkleArpeggio from "../audio/sfx-v2/sparkle-arpeggio.wav";
+import successChime from "../audio/sfx-v2/success-chime.wav";
 import { Check, Icon } from "../components/Icons";
 import { Sfx } from "../components/Sfx";
 import { BlockCursor, MONO, TerminalWindow } from "../components/TerminalWindow";
@@ -20,9 +20,10 @@ const AGENTS = [
 const SKILLS = ["remotion", "skill", "git", "fs"];
 
 /**
- * Scene 5 · SUBAGENT TUTORIAL (25-36s): the "wow" centerpiece — the agent
- * plans, spawns 3 subagents in parallel (sparkle each), writes files
- * (click each), and reports tests passing. Skills chips top-right.
+ * Scene 5 · SUBAGENT TUTORIAL (24-33s): the "wow" centerpiece — the agent
+ * plans, spawns 3 subagents in parallel (arpeggio sparkle each), writes
+ * files (digital write tick each), and reports tests passing. Skills chips
+ * top-right, pulsing orange "active" dot on each running card.
  */
 export function Scene5Subagents({ frame }: { frame: number }) {
   const typed = typedChars(frame, PROMPT_START, PROMPT_SPEED);
@@ -39,14 +40,14 @@ export function Scene5Subagents({ frame }: { frame: number }) {
         gap: 34,
       }}
     >
-      {/* Sparkle per subagent spawn, write clicks per file, whoosh at the badge */}
+      {/* Arpeggio sparkle per subagent spawn, digital write ticks, success chime */}
       {AGENTS.map((a, i) => (
-        <Sfx key={`s${i}`} src={sparkle} at={a.spawn} volume={0.75} />
+        <Sfx key={`s${i}`} src={sparkleArpeggio} at={a.spawn} volume={0.75} />
       ))}
       {AGENTS.map((a, i) => (
-        <Sfx key={`w${i}`} src={write} at={a.spawn + 12} volume={0.6} />
+        <Sfx key={`w${i}`} src={dataWrite} at={a.spawn + 12} volume={0.65} />
       ))}
-      <Sfx src={whoosh} at={172} volume={0.65} />
+      <Sfx src={successChime} at={172} volume={0.8} />
 
       {/* Skills chip row, top-right */}
       <div
@@ -133,6 +134,9 @@ export function Scene5Subagents({ frame }: { frame: number }) {
           <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 18 }}>
             {AGENTS.map((a, i) => {
               const inStyle = slideUp(frame, a.spawn, 18, 26);
+              // Pulsing "active" dot once the card is running (sine pulse ~1.2Hz).
+              const running = frame >= a.spawn;
+              const pulse = running ? 0.55 + 0.45 * Math.sin((frame - a.spawn) / 8.3) : 0;
               return (
                 <div
                   key={a.name}
@@ -178,8 +182,22 @@ export function Scene5Subagents({ frame }: { frame: number }) {
                       </span>
                     </span>
                   </span>
-                  <span style={{ opacity: fadeIn(frame, 10, a.spawn + 18) }}>
-                    <Check size={18} strokeWidth={3} />
+                  <span style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                    {/* Pulsing orange "active" indicator on running cards */}
+                    <span
+                      style={{
+                        display: "inline-block",
+                        width: 9,
+                        height: 9,
+                        borderRadius: 99,
+                        background: C.accent,
+                        boxShadow: `0 0 12px 2px rgba(234, 88, 12, ${0.35 * pulse})`,
+                        opacity: running ? pulse : 0,
+                      }}
+                    />
+                    <span style={{ opacity: fadeIn(frame, 10, a.spawn + 18) }}>
+                      <Check size={18} strokeWidth={3} />
+                    </span>
                   </span>
                 </div>
               );

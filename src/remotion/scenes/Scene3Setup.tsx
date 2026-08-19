@@ -1,4 +1,4 @@
-import blip from "../audio/sfx/blip.wav";
+import uiBlip from "../audio/sfx-v2/ui-blip.wav";
 import { Check } from "../components/Icons";
 import { Sfx } from "../components/Sfx";
 import { BlockCursor, MONO, TerminalWindow } from "../components/TerminalWindow";
@@ -23,15 +23,16 @@ const FIELDS: Field[] = [
 
 const PLATFORMS = ["Windows", "Linux", "macOS", "Termux"];
 
-// Rising-pitch blips (440 → 523 → 659 → 784 Hz) on each field + Connected.
+// Rising-pitch blips (660 → 880 → 1100 → 1320 Hz) on each field + Connected.
+// ui-blip.wav is synthesized at 660Hz; playbackRate multiplies the pitch.
 const BLIPS: { at: number; rate: number }[] = [
-  { at: 26, rate: 1.0 },
-  { at: 60, rate: 1.1892 },
-  { at: 90, rate: 1.4983 },
-  { at: 134, rate: 1.7818 },
+  { at: 26, rate: 1.0 }, // 660 Hz
+  { at: 60, rate: 1.3333 }, // 880 Hz
+  { at: 90, rate: 1.6667 }, // 1100 Hz
+  { at: 134, rate: 2.0 }, // 1320 Hz
 ];
 
-/** Scene 3 · SETUP (11-17s): wizard fields auto-fill, Connected badge, platform chips. */
+/** Scene 3 · SETUP (10-16s): wizard fields auto-fill, Connected badge, platform chips. */
 export function Scene3Setup({ frame }: { frame: number }) {
   return (
     <div
@@ -44,9 +45,9 @@ export function Scene3Setup({ frame }: { frame: number }) {
         justifyContent: "center",
       }}
     >
-      {/* UI tick blips, rising in pitch per field */}
+      {/* UI blips, rising in pitch per field */}
       {BLIPS.map((b, i) => (
-        <Sfx key={i} src={blip} at={b.at} volume={0.55} playbackRate={b.rate} />
+        <Sfx key={i} src={uiBlip} at={b.at} volume={0.55} playbackRate={b.rate} />
       ))}
       <TerminalWindow title="snsagent — first run" width={1040} style={slideUp(frame, 6, 24, 30)}>
         <div style={{ fontFamily: "var(--font-sans)", fontSize: 23, fontWeight: 700, color: C.fg }}>

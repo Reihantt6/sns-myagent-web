@@ -1,15 +1,18 @@
-import finalchime from "../audio/sfx/finalchime.wav";
-import rumble from "../audio/sfx/rumble.wav";
+import finalChord from "../audio/sfx-v2/final-chord.wav";
+import subSwell from "../audio/sfx-v2/sub-swell.wav";
 import { Sfx } from "../components/Sfx";
 import { fadeIn, slideUp } from "../helpers";
 import { C } from "../theme";
 
 /**
- * Scene 7 · CTA (48-55s): logo, URL, install pill with subtle glow.
- * Warm final chime + soft sub rumble swell under the logo; the scene
- * (and the URL) fades out to black exactly at 55s via the scene shell.
+ * Scene 7 · CTA (42-47s): logo, URL, install pill with subtle glow.
+ * Warm final chord + soft 50Hz sub swell; the logo pulses as the scene
+ * (and the URL) fades out to black exactly at 47s via the scene shell.
  */
 export function Scene7Cta({ frame }: { frame: number }) {
+  // Slow logo pulse near the end: two gentle breathes over the last ~1.5s.
+  const pulse = frame > 100 ? 1 + 0.05 * Math.sin((frame - 100) / 7) : 1;
+
   return (
     <div
       style={{
@@ -22,8 +25,8 @@ export function Scene7Cta({ frame }: { frame: number }) {
         textAlign: "center",
       }}
     >
-      <Sfx src={finalchime} at={16} volume={0.8} />
-      <Sfx src={rumble} at={22} volume={0.55} />
+      <Sfx src={finalChord} at={16} volume={0.85} />
+      <Sfx src={subSwell} at={20} volume={0.6} />
 
       <div
         style={{
@@ -33,6 +36,7 @@ export function Scene7Cta({ frame }: { frame: number }) {
           lineHeight: 1,
           color: C.accent,
           opacity: fadeIn(frame, 18),
+          transform: `scale(${pulse})`,
         }}
       >
         {">_"}

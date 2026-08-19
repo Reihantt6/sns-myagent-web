@@ -1,6 +1,6 @@
 import { Audio } from "@remotion/media";
 import { AbsoluteFill, Sequence, interpolate, useCurrentFrame } from "remotion";
-import tanteCulik from "./audio/tante-culik.wav";
+import cyberBed from "./audio/cyber-bed.wav";
 import { EASE_IN, EASE_OUT, sceneOpacity } from "./helpers";
 import { Scene1Hook } from "./scenes/Scene1Hook";
 import { Scene2Install } from "./scenes/Scene2Install";
@@ -14,13 +14,14 @@ import { C, FADE_IN, OVERLAP, SCENE, TOTAL_FRAMES } from "./theme";
 const clamp = { extrapolateLeft: "clamp" as const, extrapolateRight: "clamp" as const };
 
 /**
- * Music bed volume: the wav is pre-mixed at ~-17dB RMS / -7.4dB peak.
- * Fade in 1.5s, fade out 2s, and dip ~2.5-3dB during SFX-heavy windows
- * so effects cut through without raising the bed above -12dB.
+ * Music bed volume: the wav is pre-mixed at ~-15dB RMS / -1.9dB peak.
+ * Fade in 1.0s, fade out 1.5s, and pump the bed down during SFX-heavy
+ * windows so effects cut through: -3dB during typing/swish scenes,
+ * -2dB during the capability count-up, -1.5dB under the CTA chord.
  */
 function musicVolume(frame: number) {
-  const fadeIn = interpolate(frame, [0, 45], [0, 1], { easing: EASE_OUT, ...clamp });
-  const fadeOut = interpolate(frame, [TOTAL_FRAMES - 60, TOTAL_FRAMES], [1, 0], {
+  const fadeIn = interpolate(frame, [0, 30], [0, 1], { easing: EASE_OUT, ...clamp });
+  const fadeOut = interpolate(frame, [TOTAL_FRAMES - 45, TOTAL_FRAMES], [1, 0], {
     easing: EASE_IN,
     ...clamp,
   });
@@ -30,17 +31,17 @@ function musicVolume(frame: number) {
     return Math.max(a, b);
   };
   const dips =
-    dip(150, 318, 0.72) * // install typing ticks
-    dip(342, 508, 0.78) * // setup blips
-    dip(522, 748, 0.72) * // docs swishes/clicks
-    dip(762, 1078, 0.7) * // subagent sparkles + writes
-    dip(1092, 1418, 0.78) * // capability chimes
-    dip(1452, 1608, 0.8); // CTA chime + rumble
+    dip(120, 300, 0.708) * // install typing ticks (-3dB)
+    dip(300, 480, 0.708) * // setup blips (-3dB)
+    dip(480, 720, 0.708) * // docs swishes/clicks (-3dB)
+    dip(720, 990, 0.708) * // subagent sparkles + writes (-3dB)
+    dip(990, 1260, 0.794) * // capability count-up (-2dB)
+    dip(1260, 1410, 0.841); // CTA chord + sub swell (-1.5dB)
   return fadeIn * fadeOut * dips;
 }
 
 /**
- * 55s brand demo. Every scene fades in (0.6s ease-out) and out (0.4s
+ * 47s brand demo. Every scene fades in (0.6s ease-out) and out (0.4s
  * ease-in) and overlaps its neighbours by 0.4s for a soft crossfade —
  * no hard cuts anywhere.
  */
@@ -74,7 +75,7 @@ export function DemoVideo() {
           <SceneShell duration={s.durationInFrames} render={s.el} />
         </Sequence>
       ))}
-      <Audio src={tanteCulik} volume={musicVolume} />
+      <Audio src={cyberBed} volume={musicVolume} />
     </AbsoluteFill>
   );
 }

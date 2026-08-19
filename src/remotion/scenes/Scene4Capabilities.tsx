@@ -1,10 +1,13 @@
-import chime from "../audio/sfx/chime.wav";
-import tick from "../audio/sfx/tick.wav";
+import { interpolate } from "remotion";
+import cardChime from "../audio/sfx-v2/card-chime.wav";
+import countTick from "../audio/sfx-v2/count-tick.wav";
 import type { CSSProperties } from "react";
 import { Icon } from "../components/Icons";
 import { Sfx } from "../components/Sfx";
 import { countUp, fadeIn, slideUp } from "../helpers";
 import { C } from "../theme";
+
+const clamp = { extrapolateLeft: "clamp" as const, extrapolateRight: "clamp" as const };
 
 type Card =
   | { kind: "count"; icon: "wrench" | "terminal"; target: number; label: string }
@@ -25,11 +28,15 @@ const GAP = 28;
 
 function CardView({ card, index, frame }: { card: Card; index: number; frame: number }) {
   const enter = 20 + index * 3; // 0.1s stagger
+  const done = enter + 12 + 46; // count-up / reveal completes
+  // Subtle orange border-glow as the card completes (300ms = 9 frames).
+  const glow = interpolate(frame, [done, done + 9], [0, 1], { ...clamp });
   const style: CSSProperties = {
     width: CARD_W,
     height: CARD_H,
     borderRadius: 18,
-    border: "1px solid rgba(234, 88, 12, 0.25)",
+    border: `1px solid rgba(234, 88, 12, ${0.25 + 0.55 * glow})`,
+    boxShadow: `0 0 ${34 * glow}px ${8 * glow}px rgba(234, 88, 12, ${0.22 * glow})`,
     background: C.panel,
     padding: "30px 32px",
     display: "flex",
@@ -94,10 +101,20 @@ function CardView({ card, index, frame }: { card: Card; index: number; frame: nu
   );
 }
 
-/** Pentatonic C-E-G-A run for the six card completions (C5→E6). */
-const CHIMES = [1.0, 1.1225, 1.3348, 1.4983, 2.0, 2.2449];
+/** Pentatonic C-D-E-G-A-C run for the six card completions (523 → 1046 Hz). */
+const CHIMES = [1.0, 1.1225, 1.26, 1.4983, 1.6818, 2.0];
 
-/** Scene 6 · CAPABILITIES (36-48s): bento grid, staggered, count-ups. */
+/** Card completion frames (same math as CardView). */
+const DONE_AT = CARDS.map((_, i) => 20 + i * 3 + 12 + 46);
+
+/** Count-up tick frames: every 3 frames across both count windows. */
+const COUNT_TICKS: number[] = [];
+for (let c = 0; c < 2; c++) {
+  const start = 20 + c * 3 + 12; // 32, 35
+  for (let f = start; f < start + 46; f += 3) COUNT_TICKS.push(f);
+}
+
+/** Scene 6 · CAPABILITIES (33-42s): bento grid, staggered, count-ups. */
 export function Scene4Capabilities({ frame }: { frame: number }) {
   const gridW = CARD_W * 3 + GAP * 2;
   const left = (1920 - gridW) / 2;
@@ -105,11 +122,12 @@ export function Scene4Capabilities({ frame }: { frame: number }) {
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      {/* Count ticks at count starts, soft chime per completed card */}
-      <Sfx src={tick} at={32} volume={0.45} />
-      <Sfx src={tick} at={35} volume={0.45} />
-      {CHIMES.map((rate, i) => (
-        <Sfx key={i} src={chime} at={78 + i * 3} volume={0.6} playbackRate={rate} />
+      {/* Count-up ff3ct ticks, sharper pentatonic chime per completed card */}
+      {COUNT_TICKS.map((at, i) => (
+        <Sfx key={i} src={countTick} at={at} volume={0.28} />
+      ))}
+      {DONE_AT.map((at, i) => (
+        <Sfx key={i} src={cardChime} at={at} volume={0.6} playbackRate={CHIMES[i]} />
       ))}
       <div
         style={{

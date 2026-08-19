@@ -21,18 +21,18 @@ export const FPS = 30;
 export const WIDTH = 1920;
 export const HEIGHT = 1080;
 
-/** Scene windows (nominal, in frames at 30fps). */
+/** Scene windows (nominal, in frames at 30fps) — 47s total. */
 export const SCENE = {
-  hook: { start: 0, dur: 150 },
-  install: { start: 150, dur: 180 },
-  setup: { start: 330, dur: 180 },
-  docs: { start: 510, dur: 240 },
-  subagents: { start: 750, dur: 330 },
-  capabilities: { start: 1080, dur: 360 },
-  cta: { start: 1440, dur: 210 },
+  hook: { start: 0, dur: 120 },
+  install: { start: 120, dur: 180 },
+  setup: { start: 300, dur: 180 },
+  docs: { start: 480, dur: 240 },
+  subagents: { start: 720, dur: 270 },
+  capabilities: { start: 990, dur: 270 },
+  cta: { start: 1260, dur: 150 },
 } as const;
 
-export const TOTAL_FRAMES = 1650; // 55s @ 30fps
+export const TOTAL_FRAMES = 1410; // 47s @ 30fps
 
 /** Crossfade overlap between scenes: 0.4s (12 frames). */
 export const OVERLAP = 12;

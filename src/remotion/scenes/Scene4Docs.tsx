@@ -1,9 +1,12 @@
-import swish from "../audio/sfx/swish.wav";
-import tick from "../audio/sfx/tick.wav";
-import whoosh from "../audio/sfx/whoosh.wav";
+import { interpolate } from "remotion";
+import browserSwish from "../audio/sfx-v2/browser-swish.wav";
+import linkClick from "../audio/sfx-v2/link-click.wav";
+import scrollSwoosh from "../audio/sfx-v2/scroll-swoosh.wav";
 import { Sfx } from "../components/Sfx";
-import { fadeIn, slideUp } from "../helpers";
+import { cursorBlink, fadeIn, slideUp } from "../helpers";
 import { C } from "../theme";
+
+const clamp = { extrapolateLeft: "clamp" as const, extrapolateRight: "clamp" as const };
 
 const NAV = ["Installation", "Providers", "Memory", "MCP", "Subagents", "Slash Commands"];
 
@@ -18,8 +21,9 @@ const CODE_LINES: { parts: { t: string; c: string }[] }[] = [
 ];
 
 /**
- * Scene 4 · DOCS (17-25s): website docs in a browser window — sidebar
- * navigation with an orange active pill, scrolling content, code block.
+ * Scene 4 · DOCS (16-24s): website docs in a browser window — sidebar
+ * navigation with an orange active pill, scrolling content, code block,
+ * a live blinking URL cursor and a top page-load progress bar.
  */
 export function Scene4Docs({ frame }: { frame: number }) {
   const activeIdx = ACTIVE_AT.reduce((acc, at, i) => (frame >= at ? i : acc), 0);
@@ -28,6 +32,9 @@ export function Scene4Docs({ frame }: { frame: number }) {
   // Docs content scrolls up 40px between frame 55 and 200.
   const scroll = (frame - 55) / 145;
   const scrollY = Math.max(0, Math.min(1, scroll)) * 40;
+
+  // Top page-load bar: 0 → 100% over 45 frames (1.5s).
+  const loadPct = interpolate(frame, [8, 53], [0, 1], { ...clamp });
 
   return (
     <div
@@ -39,11 +46,11 @@ export function Scene4Docs({ frame }: { frame: number }) {
         justifyContent: "center",
       }}
     >
-      {/* Page swish on open, scroll swoosh, link clicks per sidebar switch */}
-      <Sfx src={whoosh} at={6} volume={0.55} />
-      <Sfx src={swish} at={55} volume={0.6} />
-      <Sfx src={tick} at={120} volume={0.7} />
-      <Sfx src={tick} at={180} volume={0.7} />
+      {/* Browser swish on open, scroll swoosh, link clicks per sidebar switch */}
+      <Sfx src={browserSwish} at={6} volume={0.7} />
+      <Sfx src={scrollSwoosh} at={55} volume={0.7} />
+      <Sfx src={linkClick} at={120} volume={0.8} />
+      <Sfx src={linkClick} at={180} volume={0.8} />
 
       <div
         style={{
@@ -56,6 +63,20 @@ export function Scene4Docs({ frame }: { frame: number }) {
           ...slideUp(frame, 6, 24, 30),
         }}
       >
+        {/* Page load progress bar at the very top */}
+        <div style={{ height: 4, background: "#0a0a0d", position: "relative" }}>
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: `${(loadPct * 100).toFixed(2)}%`,
+              background: "linear-gradient(90deg, #c2410c, #fb923c)",
+              opacity: fadeIn(frame, 6, 8),
+            }}
+          />
+        </div>
         {/* Title bar */}
         <div
           style={{
@@ -76,7 +97,7 @@ export function Scene4Docs({ frame }: { frame: number }) {
           </span>
         </div>
 
-        {/* URL bar */}
+        {/* URL bar with a live blinking cursor */}
         <div style={{ padding: "14px 22px", borderBottom: `1px solid ${C.line}` }}>
           <div
             style={{
@@ -97,6 +118,17 @@ export function Scene4Docs({ frame }: { frame: number }) {
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 16, color: C.fg2 }}>
               sns-myagent.web.id/docs
             </span>
+            {/* Live cursor: 10 on / 6 off, starts blinking after the bar loads */}
+            <span
+              style={{
+                display: "inline-block",
+                width: 8,
+                height: 17,
+                background: C.accent,
+                opacity: cursorBlink(frame, 30, 10, 6),
+                verticalAlign: "text-bottom",
+              }}
+            />
           </div>
         </div>
 
